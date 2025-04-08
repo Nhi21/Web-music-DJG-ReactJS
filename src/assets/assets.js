@@ -32,7 +32,7 @@ import linkedin_icon from './linkedin_icon.png'
 import twitter_icon from './twitter_icon.png'
 import facebook_icon from './facebook_icon.png'
 import cross_icon from './cross_icon.png'
-
+import user_avatar from './user_avatar.png'
 export const assets = {
     bell_icon,
     home_icon,
@@ -66,7 +66,8 @@ export const assets = {
     linkedin_icon,
     twitter_icon,
     facebook_icon,
-    cross_icon
+    cross_icon,
+    user_avatar
 }
 
 export const songsData = [

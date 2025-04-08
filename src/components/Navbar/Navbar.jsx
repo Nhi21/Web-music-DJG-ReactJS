@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './Navbar.css'
 import { assets } from '../../assets/assets'
 import { useNavigate } from 'react-router-dom'
-const Navbar = ({ setShowLogin }) => {
+const Navbar = ({ setShowLogin, isLoggedIn }) => {
 
   const [menu, setMenu] = useState("discover");
   const navigate = useNavigate();
@@ -28,7 +28,12 @@ const Navbar = ({ setShowLogin }) => {
           <img src={assets.search_icon} alt="" />
           <input className='search-input' type="text" placeholder="Tìm kiếm" />
         </div>
-        <button className='sign-up' onClick={()=>setShowLogin(true)}>Đăng nhập</button>
+        {isLoggedIn ? (
+          <img src={assets.user_avatar} alt="Avatar" className='avatar-icon' />
+        ) : (
+          <button className='sign-up' onClick={() => setShowLogin(true)}>Đăng nhập</button>
+        )}
+
         <button className='sign-in'>Đăng ký</button>
       </div>
     </div>

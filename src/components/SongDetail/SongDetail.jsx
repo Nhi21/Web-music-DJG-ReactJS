@@ -3,11 +3,14 @@ import './SongDetail.css'
 import { data, useParams } from 'react-router-dom'
 import { assets, songsData } from '../../assets/assets';
 
-const SongDetail = () => {
-  const { video_id } = useParams();
+const SongDetail = ({ isLoggedIn, setShowLogin }) => {
 
+  const { video_id } = useParams();
   const [songsData, setSongsData] = useState({});
   const [favorites, setFavorites] = useState([]);
+  const [comment, setComment] = useState("");//ds bl
+  const [newComment, setNewComment] = useState("");//new bl
+
   const songRank = [
     { name: "Mất kết nối", singer: "Dương Domic" },
     { name: "Giờ thì", singer: "buitruonglinh" },
@@ -20,6 +23,7 @@ const SongDetail = () => {
     { name: "Có đôi điều", singer: "Shiki" },
     { name: "Hello Việt Nam", singer: "Bống" },
   ];
+
   useEffect(() => {
     const saveFavorites = JSON.parse(localStorage.getItem("favoriteSongs")) || [];
     setFavorites(saveFavorites);
@@ -36,25 +40,38 @@ const SongDetail = () => {
   }, [video_id]);
 
   const toggleFavorite = (songId) => {
-    if (!songId) {
+    if (!isLoggedIn) {
+      setShowLogin(true);
       console.error("Không có songId (video_id) để thêm vào yêu thích");
       return;
     }
     const currentFavorites = JSON.parse(localStorage.getItem("favoriteSongs")) || [];
     let updatedFavorites;
+
     if (currentFavorites.includes(songId)) {
       updatedFavorites = currentFavorites.filter((id) => id !== songId);
+      alert("Đã bỏ khỏi danh sách yêu thích");
+
     } else {
       updatedFavorites = [...currentFavorites, songId];
+      alert("Đã thêm vào danh sách yêu thích");
     }
     setFavorites(updatedFavorites);
     localStorage.setItem("favoriteSongs", JSON.stringify(updatedFavorites)); // Lưu danh sách yêu thích vào localStorage
-    alert(currentFavorites.includes(songId) ?
-      "Đã bỏ khỏi danh sách yêu thích" :
-      "Đã thêm vào danh sách yêu thích"
-    );
+    // alert(currentFavorites.includes(songId) ?
+    //   "Đã bỏ khỏi danh sách yêu thích" :
+    //   "Đã thêm vào danh sách yêu thích"
+    // );
   }
 
+  const handleComment = () => {
+    if (!isLoggedIn) {
+      alert("Vui lòng đăng nhập để bình luận");
+      setShowLogin(true);
+      return;
+    }
+    console.log("Bình luận của người dùng:", comment);
+  }
   return (
     <>
       <div className='song-detail'>
@@ -65,13 +82,6 @@ const SongDetail = () => {
             <h2>{songsData.title}</h2>
             <h4>{songsData.artist}</h4>
           </div>
-          {/* <div className="duration">
-            <p>1:06</p>
-            <div>
-              <hr />
-            </div>
-            <p>3:58</p>
-          </div> */}
           {songsData.play_url ? (
             <div className="audio-player"    >
               <audio controls autoPlay>
@@ -105,7 +115,11 @@ const SongDetail = () => {
         )}
       </div>
       <div className='add-love'>
-        <img src={assets.like_icon} alt="Thêm vào yêu thích" onClick={() => toggleFavorite(songsData.video_id)} />
+        <img
+          src={assets.like_icon}
+          alt="Thêm vào yêu thích"
+          onClick={() => toggleFavorite(songsData.video_id)}
+        />
         <p>{favorites.includes(songsData.video_id) ? "Bỏ yêu thích" : "Thêm vào yêu thích"}</p>
         <img src={assets.bell_icon} alt="" />
         <p>Thông báo</p>
